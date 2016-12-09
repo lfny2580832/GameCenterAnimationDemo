@@ -29,6 +29,7 @@
 static NSString *SHOWFADE = @"SHOWFADE";
 static NSString *SHOWSCALE = @"SHOWSCALE";
 static NSString *SHOWPOSITION = @"SHOWPOSITION";
+static NSString *HIDEPOSITION = @"HIDEPOSITION";
 static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 
 - (instancetype)initWithModel:(BallAnimationModel *)model
@@ -48,7 +49,7 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 {
     CAAnimationGroup *group = [CAAnimationGroup animation];
     CABasicAnimation *showOpacityAnimation = [self opacityAnimationFrom:0.0 to:0.8];
-    CABasicAnimation *showSizeAnimation = [self sizeAnimationFrom:_model.tempRadius to:_model.originalRadius];
+    CABasicAnimation *showSizeAnimation = [self sizeAnimationFrom:_model.originalRadius to:_model.tempRadius];
     CAKeyframeAnimation *showPositionAnimation = [self positionShowAnimationWithStep:1];
     group.animations = @[showOpacityAnimation,showSizeAnimation,showPositionAnimation];
 }
@@ -58,6 +59,9 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
     for (int i = 0; i < 9; i ++) {
         CABasicAnimation *microPositionAni = [CABasicAnimation animationWithKeyPath:@"position"];
         microPositionAni.toValue = [NSValue valueWithCGPoint:CGPointMake(_model.tempPoint.x + [self randomPositionValue], _model.tempPoint.y + [self randomPositionValue])];
+        if (i == 8) {
+            microPositionAni.toValue = [NSValue valueWithCGPoint:CGPointMake(_model.tempPoint.x, _model.tempPoint.y)];
+        }
         microPositionAni.duration = 1.0;
         microPositionAni.beginTime = CACurrentMediaTime() + i;
         microPositionAni.delegate = self;
@@ -73,7 +77,7 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 {
     CAAnimationGroup *group = [CAAnimationGroup animation];
     CABasicAnimation *hideOpacityAnimation = [self opacityAnimationFrom:0.8 to:0.0];
-    CABasicAnimation *hideSizeAnimation = [self sizeAnimationFrom:_model.finalRadius to:_model.tempRadius];
+    CABasicAnimation *hideSizeAnimation = [self sizeAnimationFrom:_model.tempRadius to:_model.finalRadius];
     CAKeyframeAnimation *hidePositionAnimation = [self positionShowAnimationWithStep:2];
     group.animations = @[hideOpacityAnimation,hideSizeAnimation,hidePositionAnimation];
 }
@@ -93,7 +97,7 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
     if (anim == [self.ball animationForKey:SHOWPOSITION]) {
         [self addRandomPositionAnimation];
     }else if (anim == [self.ball animationForKey:RANDOMPOSITION]) {
-        
+        [self addHideAnimationGroup];
     }
     
     [CATransaction commit];
@@ -103,29 +107,29 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 - (UIBezierPath *)pathWithModel:(BallAnimationModel *)model step:(NSInteger)step
 {
     //两点中点
-    CGPoint midPoint = CGPointMake(model.originalPoint.x + (model.tempPoint.x -  model.originalPoint.x)/2, model.tempPoint.y + (model.originalPoint.y - model.tempPoint.y)/2);
-
+    UIBezierPath *path = [[UIBezierPath alloc]init];
     CGFloat x,y,k,cor,dis;
     if (step == 1) {
+        CGPoint midPoint = CGPointMake(model.originalPoint.x + (model.tempPoint.x -  model.originalPoint.x)/2, model.tempPoint.y + (model.originalPoint.y - model.tempPoint.y)/2);
         //斜率
         k = (model.originalPoint.y - model.tempPoint.y)/(model.tempPoint.x - model.originalPoint.x);
         //两点距离的一半
         dis = sqrt(pow((model.originalPoint.y - model.tempPoint.y), 2) + pow((model.tempPoint.x - model.originalPoint.x), 2))/2;
-
+        cor = atan(k)/M_PI*180;
+        x = midPoint.x + model.showControlOffset * dis * cosx(cor);
+        y = midPoint.y + model.showControlOffset * dis * sinx(cor);
+        [path moveToPoint:model.originalPoint];
+        [path addQuadCurveToPoint:model.tempPoint controlPoint:CGPointMake(x, y)];
     }else if (step ==2) {
+        CGPoint midPoint = CGPointMake(model.tempPoint.x + (model.finalPoint.x -  model.tempPoint.x)/2, model.finalPoint.y + (model.tempPoint.y - model.finalPoint.y)/2);
         k = (model.finalPoint.y - model.tempPoint.y)/(model.tempPoint.x - model.finalPoint.x);
         dis = sqrt(pow((model.finalPoint.y - model.tempPoint.y), 2) + pow((model.tempPoint.x - model.finalPoint.x), 2))/2;
+        cor = atan(k)/M_PI*180;
+        x = midPoint.x + model.hideControlOffset * dis * cosx(cor);
+        y = midPoint.y + model.hideControlOffset * dis * sinx(cor);
+        [path moveToPoint:model.tempPoint];
+        [path addQuadCurveToPoint:model.finalPoint controlPoint:CGPointMake(x, y)];
     }
-    
-    cor = atan(k)/M_PI*180;
-
-    //bezier的控制点坐标
-    x = midPoint.x + model.controlOffset * dis * cosx(cor);
-    y = midPoint.y + model.controlOffset * dis * sinx(cor);
-    
-    UIBezierPath *path = [[UIBezierPath alloc]init];
-    [path moveToPoint:model.originalPoint];
-    [path addQuadCurveToPoint:model.tempPoint controlPoint:CGPointMake(x, y)];
     
     return path;
 }
@@ -135,8 +139,8 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 - (CABasicAnimation *)opacityAnimationFrom:(CGFloat)fromValue to:(CGFloat)toValue
 {
     CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.fromValue = @(0.0);
-    opacityAnimation.toValue = @(0.8);
+    opacityAnimation.fromValue = @(fromValue);
+    opacityAnimation.toValue = @(toValue);
     opacityAnimation.duration = 1.0;
     opacityAnimation.delegate = self;
     opacityAnimation.removedOnCompletion = NO;
@@ -175,8 +179,9 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
     positionShowAnimation.autoreverses = NO;
     positionShowAnimation.removedOnCompletion = NO;
     positionShowAnimation.fillMode = kCAFillModeForwards;
-    [positionShowAnimation setValue:SHOWPOSITION forKey:SHOWPOSITION];
-    [self.ball addAnimation:positionShowAnimation forKey:SHOWPOSITION];
+    NSString *key = (step==1)? SHOWPOSITION:HIDEPOSITION;
+    [positionShowAnimation setValue:key forKey:key];
+    [self.ball addAnimation:positionShowAnimation forKey:key];
     return positionShowAnimation;
 }
 

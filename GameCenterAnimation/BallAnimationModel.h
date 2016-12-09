@@ -20,6 +20,7 @@
 @property (nonatomic, assign) CGFloat finalRadius;
 
 ///-1-0-1，0在两点中点，-1在左边，1在右边，等腰直角三角形的直角点
-@property (nonatomic, assign) CGFloat controlOffset;
+@property (nonatomic, assign) CGFloat showControlOffset;
+@property (nonatomic, assign) CGFloat hideControlOffset;
 
 @end
