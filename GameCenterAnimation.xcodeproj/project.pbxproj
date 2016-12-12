@@ -16,6 +16,8 @@
 		4A17EA331DF9015E00AC207C /* BallAnimationLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A17EA321DF9015E00AC207C /* BallAnimationLayer.m */; };
 		4A17EA361DF9184800AC207C /* GameCenterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A17EA351DF9184800AC207C /* GameCenterView.m */; };
 		4A17EA391DF95EBA00AC207C /* BallAnimationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A17EA381DF95EBA00AC207C /* BallAnimationModel.m */; };
+		4A17EA3D1DFE6AAA00AC207C /* LOGO@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A17EA3B1DFE6AAA00AC207C /* LOGO@2x.png */; };
+		4A17EA3E1DFE6AAA00AC207C /* LOGO@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A17EA3C1DFE6AAA00AC207C /* LOGO@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		4A17EA351DF9184800AC207C /* GameCenterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameCenterView.m; sourceTree = "<group>"; };
 		4A17EA371DF95EBA00AC207C /* BallAnimationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BallAnimationModel.h; sourceTree = "<group>"; };
 		4A17EA381DF95EBA00AC207C /* BallAnimationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BallAnimationModel.m; sourceTree = "<group>"; };
+		4A17EA3B1DFE6AAA00AC207C /* LOGO@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LOGO@2x.png"; sourceTree = "<group>"; };
+		4A17EA3C1DFE6AAA00AC207C /* LOGO@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LOGO@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +79,7 @@
 				4A17EA321DF9015E00AC207C /* BallAnimationLayer.m */,
 				4A17EA341DF9184800AC207C /* GameCenterView.h */,
 				4A17EA351DF9184800AC207C /* GameCenterView.m */,
+				4A17EA3A1DFE6A8700AC207C /* Images */,
 				4A17EA1A1DF8F61800AC207C /* Supporting Files */,
 			);
 			path = GameCenterAnimation;
@@ -92,6 +97,15 @@
 				4A17EA211DF8F61800AC207C /* ViewController.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4A17EA3A1DFE6A8700AC207C /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				4A17EA3B1DFE6AAA00AC207C /* LOGO@2x.png */,
+				4A17EA3C1DFE6AAA00AC207C /* LOGO@3x.png */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -153,7 +167,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A17EA3E1DFE6AAA00AC207C /* LOGO@3x.png in Resources */,
 				4A17EA2A1DF8F61800AC207C /* LaunchScreen.storyboard in Resources */,
+				4A17EA3D1DFE6AAA00AC207C /* LOGO@2x.png in Resources */,
 				4A17EA271DF8F61800AC207C /* Assets.xcassets in Resources */,
 				4A17EA251DF8F61800AC207C /* Main.storyboard in Resources */,
 			);
@@ -330,6 +346,7 @@
 				4A17EA301DF8F61800AC207C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
