@@ -48,9 +48,9 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 - (void)addShowAnimationGroup
 {
     CAAnimationGroup *group = [CAAnimationGroup animation];
-    CABasicAnimation *showOpacityAnimation = [self opacityAnimationFrom:0.0 to:0.5 duration:0.8];
-    CABasicAnimation *showSizeAnimation = [self sizeAnimationFrom:_model.originalRadius to:_model.tempRadius originScale:1 duration:0.8];
-    CAKeyframeAnimation *showPositionAnimation = [self positionShowAnimationWithStep:1 duration:0.8];
+    CAKeyframeAnimation *showOpacityAnimation = [self opacityAnimationFrom:0.0 to:0.5 duration:0.6];
+    CABasicAnimation *showSizeAnimation = [self sizeAnimationFrom:_model.originalRadius to:_model.tempRadius originScale:1 duration:0.6];
+    CAKeyframeAnimation *showPositionAnimation = [self positionShowAnimationWithStep:1 duration:0.8 ifEaseOut:NO];
     group.animations = @[showOpacityAnimation,showSizeAnimation,showPositionAnimation];
 }
 
@@ -76,9 +76,9 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 - (void)addHideAnimationGroup
 {
     CAAnimationGroup *group = [CAAnimationGroup animation];
-    CABasicAnimation *hideOpacityAnimation = [self opacityAnimationFrom:0.5 to:0.0 duration:0.6];
+    CAKeyframeAnimation *hideOpacityAnimation = [self opacityAnimationFrom:0.5 to:0.0 duration:0.6];
     CABasicAnimation *hideSizeAnimation = [self sizeAnimationFrom:_model.tempRadius to:_model.finalRadius originScale:_model.tempRadius/_model.originalRadius duration:0.6];
-    CAKeyframeAnimation *hidePositionAnimation = [self positionShowAnimationWithStep:2 duration:0.6];
+    CAKeyframeAnimation *hidePositionAnimation = [self positionShowAnimationWithStep:2 duration:0.6 ifEaseOut:YES];
     group.animations = @[hideOpacityAnimation,hideSizeAnimation,hidePositionAnimation];
 }
 
@@ -137,12 +137,13 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 
 #pragma mark Animations
 ///透明度
-- (CABasicAnimation *)opacityAnimationFrom:(CGFloat)fromValue to:(CGFloat)toValue duration:(CGFloat)duration
+- (CAKeyframeAnimation *)opacityAnimationFrom:(CGFloat)fromValue to:(CGFloat)toValue duration:(CGFloat)duration
 {
-    CABasicAnimation *opacityAnimation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityAnimation.fromValue = @(fromValue);
-    opacityAnimation.toValue = @(toValue);
+    CAKeyframeAnimation *opacityAnimation = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
+    opacityAnimation.values = @[@(fromValue),@(fromValue),@(toValue),@(toValue)];
+    opacityAnimation.keyTimes = @[@(0.0),@(0.2),@(0.7),@(1.0)];
     opacityAnimation.duration = duration;
+    opacityAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     opacityAnimation.delegate = self;
     opacityAnimation.removedOnCompletion = NO;
     opacityAnimation.fillMode = kCAFillModeForwards;
@@ -170,12 +171,17 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 }
 
 ///位置
-- (CAKeyframeAnimation *)positionShowAnimationWithStep:(NSInteger)step duration:(CGFloat)duration
+- (CAKeyframeAnimation *)positionShowAnimationWithStep:(NSInteger)step duration:(CGFloat)duration ifEaseOut:(BOOL)isEaseOut
 {
     CAKeyframeAnimation *positionShowAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
     UIBezierPath *path = [self pathWithModel:_model step:step];
-    positionShowAnimation.path = CGPathCreateCopy(path.CGPath);;
+    positionShowAnimation.path = CGPathCreateCopy(path.CGPath);
     positionShowAnimation.duration = duration;
+    if (isEaseOut) {
+        positionShowAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    }else{
+        positionShowAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault];
+    }
     positionShowAnimation.delegate = self;
     positionShowAnimation.autoreverses = NO;
     positionShowAnimation.removedOnCompletion = NO;

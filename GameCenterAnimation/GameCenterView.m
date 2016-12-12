@@ -12,6 +12,10 @@
 
 #define SCREEN_WIDTH ([[UIScreen mainScreen]bounds].size.width)
 
+@interface GameCenterView ()<CAAnimationDelegate>
+
+@end
+
 @implementation GameCenterView
 {
     NSMutableArray *_layers;
@@ -154,7 +158,8 @@
     hideAnimation.removedOnCompletion = NO;
     hideAnimation.fillMode = kCAFillModeForwards;
     hideAnimation.autoreverses = NO;
-    [_logoLayer addAnimation:hideAnimation forKey:nil];
+    hideAnimation.delegate = self;
+    [_logoLayer addAnimation:hideAnimation forKey:@"hide"];
     group.animations = @[showAnimation,hideAnimation];
     [_layers addObject:_logoLayer];
     [self.layer addSublayer:_logoLayer];
@@ -168,5 +173,13 @@
         [layer removeFromSuperlayer];
     }
 }
+
+#pragma mark CAAnimation Delegate
+//- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+//{
+//    if (anim == [_logoLayer animationForKey:@"hide"]) {
+//        [self removeElements];
+//    }
+//}
 
 @end
