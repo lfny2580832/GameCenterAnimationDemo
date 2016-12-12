@@ -46,7 +46,6 @@
             self.transform = CGAffineTransformScale(self.transform, 1.2, 1.2);
         }
         
-        
     }
     return self;
 }
@@ -54,7 +53,7 @@
 - (void)addElements
 {
     [self addBalls];
-    [self addLogo];
+//    [self addLogo];
 }
 
 - (void)addBalls
