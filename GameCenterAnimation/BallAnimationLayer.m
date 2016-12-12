@@ -49,7 +49,7 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 {
     CAAnimationGroup *group = [CAAnimationGroup animation];
     CABasicAnimation *showOpacityAnimation = [self opacityAnimationFrom:0.0 to:0.8];
-    CABasicAnimation *showSizeAnimation = [self sizeAnimationFrom:_model.originalRadius to:_model.tempRadius];
+    CABasicAnimation *showSizeAnimation = [self sizeAnimationFrom:_model.originalRadius to:_model.tempRadius originScale:1];
     CAKeyframeAnimation *showPositionAnimation = [self positionShowAnimationWithStep:1];
     group.animations = @[showOpacityAnimation,showSizeAnimation,showPositionAnimation];
 }
@@ -77,7 +77,7 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 {
     CAAnimationGroup *group = [CAAnimationGroup animation];
     CABasicAnimation *hideOpacityAnimation = [self opacityAnimationFrom:0.8 to:0.0];
-    CABasicAnimation *hideSizeAnimation = [self sizeAnimationFrom:_model.tempRadius to:_model.finalRadius];
+    CABasicAnimation *hideSizeAnimation = [self sizeAnimationFrom:_model.tempRadius to:_model.finalRadius originScale:_model.tempRadius/_model.originalRadius];
     CAKeyframeAnimation *hidePositionAnimation = [self positionShowAnimationWithStep:2];
     group.animations = @[hideOpacityAnimation,hideSizeAnimation,hidePositionAnimation];
 }
@@ -95,9 +95,12 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
     [CATransaction setDisableActions:YES];
     
     if (anim == [self.ball animationForKey:SHOWPOSITION]) {
-        [self addRandomPositionAnimation];
-    }else if (anim == [self.ball animationForKey:RANDOMPOSITION]) {
+//        [self addRandomPositionAnimation];
+        NSLog(@"----%f",self.ball.frame.size.width);
         [self addHideAnimationGroup];
+
+    }else if (anim == [self.ball animationForKey:RANDOMPOSITION]) {
+//        [self addHideAnimationGroup];
     }
     
     [CATransaction commit];
@@ -152,10 +155,10 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
 }
 
 ///大小
-- (CABasicAnimation *)sizeAnimationFrom:(CGFloat)fromValue to:(CGFloat)toValue
+- (CABasicAnimation *)sizeAnimationFrom:(CGFloat)fromValue to:(CGFloat)toValue originScale:(CGFloat)originScale
 {
     CABasicAnimation *sizeAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    sizeAnimation.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.0, 1.0, 0)];
+    sizeAnimation.fromValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(originScale, originScale, 0)];
     CGFloat scale = toValue/fromValue;
     sizeAnimation.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(scale, scale, 0)];
     sizeAnimation.duration = 1.0;
