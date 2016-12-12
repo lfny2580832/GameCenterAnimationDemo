@@ -71,8 +71,8 @@
 		4A17EA191DF8F61800AC207C /* GameCenterAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				4A17EA1D1DF8F61800AC207C /* AppDelegate.h */,
-				4A17EA1E1DF8F61800AC207C /* AppDelegate.m */,
+				4A17EA201DF8F61800AC207C /* ViewController.h */,
+				4A17EA211DF8F61800AC207C /* ViewController.m */,
 				4A17EA371DF95EBA00AC207C /* BallAnimationModel.h */,
 				4A17EA381DF95EBA00AC207C /* BallAnimationModel.m */,
 				4A17EA311DF9015E00AC207C /* BallAnimationLayer.h */,
@@ -93,8 +93,8 @@
 				4A17EA261DF8F61800AC207C /* Assets.xcassets */,
 				4A17EA281DF8F61800AC207C /* LaunchScreen.storyboard */,
 				4A17EA2B1DF8F61800AC207C /* Info.plist */,
-				4A17EA201DF8F61800AC207C /* ViewController.h */,
-				4A17EA211DF8F61800AC207C /* ViewController.m */,
+				4A17EA1D1DF8F61800AC207C /* AppDelegate.h */,
+				4A17EA1E1DF8F61800AC207C /* AppDelegate.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

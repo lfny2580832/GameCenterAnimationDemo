@@ -11,6 +11,7 @@
 #import "BallAnimationModel.h"
 
 #define SCREEN_WIDTH ([[UIScreen mainScreen]bounds].size.width)
+#define SCREEN_HEIGHT ([[UIScreen mainScreen]bounds].size.height)
 
 @interface GameCenterView ()<CAAnimationDelegate>
 
@@ -22,10 +23,12 @@
     CALayer *_logoLayer;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)init
 {
+    CGRect frame = CGRectMake(0, 0, 370, 667);
     self = [super initWithFrame:frame];
     if (self) {
+        self.center = CGPointMake(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
         
         UIButton *addBtn = [[UIButton alloc]initWithFrame:CGRectMake(100, 600, 100, 40)];
         addBtn.backgroundColor = [UIColor orangeColor];
@@ -36,6 +39,14 @@
         removeBtn.backgroundColor = [UIColor orangeColor];
         [removeBtn addTarget:self action:@selector(removeElements) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:removeBtn];
+        
+        if (SCREEN_WIDTH < 375) {
+            self.transform = CGAffineTransformScale(self.transform, 0.9, 0.9);
+        }else if (SCREEN_WIDTH > 375) {
+            self.transform = CGAffineTransformScale(self.transform, 1.2, 1.2);
+        }
+        
+        
     }
     return self;
 }
@@ -139,7 +150,7 @@
 - (void)addLogo
 {
     _logoLayer = [CALayer layer];
-    _logoLayer.frame = CGRectMake((SCREEN_WIDTH-140)/2, 292-24, 140, 42);
+    _logoLayer.frame = CGRectMake((370-140)/2, 292-24, 140, 42);
     _logoLayer.contents = (__bridge id _Nullable)([UIImage imageNamed:@"LOGO"].CGImage);
     _logoLayer.opacity = 0;
     CAAnimationGroup *group = [CAAnimationGroup animation];

@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    GameCenterView *view = [[GameCenterView alloc]initWithFrame:self.view.frame];
+    GameCenterView *view = [[GameCenterView alloc]init];
     [self.view addSubview:view];
 }
 

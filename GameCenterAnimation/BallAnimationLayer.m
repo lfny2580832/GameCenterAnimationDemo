@@ -37,7 +37,7 @@ static NSString *RANDOMPOSITION = @"RANDOMPOSITION";
     self = [super init];
     if (self) {
         _model = model;
-        self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        self.frame = CGRectMake(0, 0, 370, 667);
         [self addSublayer:self.ball];
         [self addShowAnimationGroup];
     }
